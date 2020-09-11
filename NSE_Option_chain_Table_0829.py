@@ -67,11 +67,12 @@ def fetch_oi_all_expiry(expiry_dt, tikr, dajs):
 
 def write_to_csv(df_to_write, tikr):
     location = 'C:\\Saiyad ADT\\Learnnig\\Sensex\\Codes\\Option Chain\\Daily_Data\\'
-    time_stamp = (datetime.today()).strftime('%Y_%m_%d')
-    output_file = str(location) + str('Options_data_') + str(tikr) + str('_') + str(time_stamp) + str('.csv')
+    date_stamp = (datetime.today()).strftime('%Y_%m_%d')
+    time_stamp = (datetime.today()).strftime('%Y_%m_%d_%H_%M')
+    output_file = str(location) + str('Options_data_') + str(tikr) + str('_') + str(date_stamp) + str('.csv')
     if path.exists(output_file):
         # Reading the old file present
-        df_old_nse = pd.read_csv(output_file)
+        df_old_nse = pd.read_csv(output_file, index_col = 0)
         # Appending the old file and the new data
         df_to_write = df_old_nse.append(df_to_write, ignore_index=True)
         # Writting the file with latest data for the day

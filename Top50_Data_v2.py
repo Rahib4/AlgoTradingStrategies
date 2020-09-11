@@ -43,11 +43,12 @@ def fetch_json_method():
 
 def write_to_csv(df_to_write):
     location = 'C:\\Saiyad ADT\\Learnnig\\Sensex\\Codes\\Option Chain\\Nifty50\\'
-    time_stamp = (datetime.today()).strftime('%Y_%m_%d')
-    output_file = str(location) + str('Nifty50_') + str(time_stamp) + str('.csv')
+    date_stamp = (datetime.today()).strftime('%Y_%m_%d')
+    time_stamp = (datetime.today()).strftime('%Y_%m_%d_%H_%M')
+    output_file = str(location) + str('Nifty50_') + str(date_stamp) + str('.csv')
     if path.exists(output_file):
         # Reading the old file present
-        df_old_nse = pd.read_csv(output_file)
+        df_old_nse = pd.read_csv(output_file, index_col = 0)
         # Appending the old file and the new data
         df_to_write = df_old_nse.append(df_to_write, ignore_index=True)
         # Writting the file with latest data for the day
@@ -82,7 +83,6 @@ def halt_and_run(lag_time_secs):
     iteration = int(cycles_to_run(10))
     print('Total # of iterations calculated - ', iteration)
     for i in range(1, iteration + 1):
-        print(i)
         if (current_time - start_time).total_seconds() < 0:
             # Market is closed as of now
             print('Markets havent opened yet, Go back to sleep')
