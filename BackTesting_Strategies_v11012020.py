@@ -71,8 +71,11 @@ def Adjust_stock_splits(tikr,df_filter):
     df_split['Purpose'] = df_split['Purpose'].str.strip()
     df_split['Ex_Date'] = pd.to_datetime(df_split['Ex_Date'], format = '%d-%b-%y')
     df_split[['Pre', 'Post']] = df_split['Purpose'].str.split(':', 1, expand=True)
-    df_split['Multiplier'] = pd.to_numeric(df_split['Pre'],errors='coerce')/(pd.to_numeric(df_split['Pre'],errors='coerce') + pd.to_numeric(df_split['Post'],errors='coerce'))
-    
+    #df_split['Multiplier'] = pd.to_numeric(df_split['Pre'],errors='coerce')/(pd.to_numeric(df_split['Pre'],errors='coerce') + pd.to_numeric(df_split['Post'],errors='coerce'))
+    df_split['Multiplier'] = np.where(df_split['Category'] == 'Split', 
+                                        pd.to_numeric(df_split['Post'],errors='coerce')/pd.to_numeric(df_split['Pre'],errors='coerce'), 
+                                        pd.to_numeric(df_split['Pre'],errors='coerce')/(pd.to_numeric(df_split['Pre'],errors='coerce') + pd.to_numeric(df_split['Post'],errors='coerce')))
+        
     df_split = df_split[df_split['Tikr'] == tikr]
     df_split_adj = pd.merge(df_filter, df_split[['Tikr','Ex_Date','Multiplier']], how='left',left_on=['ScriptID'], right_on=['Tikr'])
     # Pending - To map the numbers and divide the numbers before Start Date
